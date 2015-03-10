@@ -51,10 +51,12 @@
     </div>
     <div class="block col-contain">
       <div class="col-one">
+        <p>Begin Line</p>
         <input class="width-100" type="number" name="origin" id="origin" value=1>
         <textarea class="width-100" id="originStr" rows="5" style="font-size:10px;"></textarea>
       </div>
       <div class="col-one">
+        <p>End Line</p>
         <input class="width-100" type="number" name="dest" id="dest" value=9999999>
         <textarea class="width-100" id="destStr" rows="5" style="font-size:10px;"></textarea>
       </div>
@@ -89,6 +91,12 @@
     <div class="block form-group">
       <label for="translated-text"><b>Syntax Errors</b></label>
       <textarea class="width-100" id="translated-text" rows="20"></textarea>
+    </div>
+    
+    
+    <div class="block form-group">
+      <label for="result"><b>Execution Output</b></label>
+      <textarea class="width-100" id="result" rows="20"></textarea>
     </div>
 
     <div class="block" style="display: none;">
@@ -230,16 +238,30 @@
     var origin = $('input[name=origin]').val();
     var dest = $('input[name=dest]').val();
     
+    
+    
     console.log("domains: "+ origin + " " + dest);
    
       google.script.run
       .withSuccessHandler(
-          function(translatedText, element) {
-            console.log("translatedText");
-            console.log(translatedText);
+          function(obj, element) {
+            console.log("obj.translatedText");
+            console.log(obj.translatedText);
             // $('#translated-text').val(translatedText);
-            var validatedCode = analyzeCode(translatedText);
+            var validatedCode = analyzeCode(obj.translatedText);
             $('#translated-text').val(validatedCode);
+            
+            if( (obj.translatedText).indexOf("no errors") >= 0 ){
+              console.log("NO ERRORS!");
+              $('#translated-text').attr('rows', 2);
+              $('#result').attr('rows', 25);
+            } else {
+              $('#translated-text').attr('rows', 25);
+              $('#result').attr('rows', 2);
+            }
+            
+            $('#result').val(obj.result);
+            
             $('#run-translation').prop('disabled', false);
             element.disabled = false;
           })

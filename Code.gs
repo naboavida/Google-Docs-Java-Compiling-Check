@@ -335,11 +335,14 @@ function runJavaTranslation(origin, dest) {
         "contentType": "application/json",
       };
   
+  // https://developers.google.com/apps-script/reference/url-fetch/url-fetch-app
   var result = UrlFetchApp.fetch(url, options);
   
   //for(i in result) {
    //Logger.log(i + ": " + result[i]);
  //}
+  
+  var toRet = {};
   
   Logger.log(result.getContentText());
   
@@ -357,13 +360,18 @@ function runJavaTranslation(origin, dest) {
     Logger.log("PARAMS ERROR: "+params.Error);
     
     if(params[keys[1]] != null)
-      return params[keys[1]];
+      toRet.translatedText = params[keys[1]];
     else
-      return "no errors";
+      toRet.translatedText = "no errors";
+    
+    if(params[keys[2]] != null)
+      toRet.result = params[keys[2]];
+    else
+      toRet.result = "";
   }
   
   
-  
+  return toRet;
   
   //return translated.join('\n');
 }
